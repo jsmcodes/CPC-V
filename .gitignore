@@ -1,0 +1,5 @@
+Install/
+
+.venv/
+
+__pycache__/

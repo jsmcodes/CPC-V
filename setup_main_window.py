@@ -8,7 +8,8 @@ import subprocess
 import shutil
 import socket
 
-from UI.setup_ui import Ui_Setup
+from create_database import DatabaseManager
+from UI.setup_window_ui import Ui_Setup
 
 
 class Setup(QMainWindow):
@@ -168,6 +169,11 @@ class Setup(QMainWindow):
         destination_path = r"C:\xampp\apache\conf\extra"
 
         shutil.copy(source_path, destination_path)
+
+        database = DatabaseManager()
+        database.create_database()
+        database.create_tables()
+        database.insert_values()
 
     def connect_functions_to_buttons(self):
         self.ui.pshbtn_get_server_ip_address.clicked.connect(self.get_ip_address)

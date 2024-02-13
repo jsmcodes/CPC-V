@@ -2,18 +2,19 @@ from PyQt5.QtWidgets import QApplication
 
 import sys
 
-from setup_login import DevLogin
-from setup_main_window import Setup
+from main_login import Login
+from main_main_window import MainWindow
 
 
 def main():
     app = QApplication(sys.argv)
     
-    dev_login = DevLogin()
-    result = dev_login.exec_()
+    login = Login()
+    login.show()
+    result = login.exec_()
 
-    if result == DevLogin.Accepted:
-        main_window = Setup()
+    if result == login.Accepted:
+        main_window = MainWindow()
         main_window.show()
         sys.exit(app.exec_())
 

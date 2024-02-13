@@ -4,18 +4,24 @@ from PyQt5.QtGui import QIcon, QPixmap
 
 import sqlite3
 
+from create_database import DatabaseManager
 from UI.main_patient_dialog_ui import Ui_PatientDialog
 
 
 class PatientDialog(QDialog):
     def __init__(self):
         super().__init__()
+        self.database = DatabaseManager()
         self.setup_ui()
         self.setup_window()
+        self.connect_functions_to_buttons()
 
     def setup_ui(self):
         self.ui = Ui_PatientDialog()
         self.ui.setupUi(self)
+
+        self.patient_id = self.get_last_patient_id() + 1
+        self.ui.lbl_id.setText(f"Patient #{self.patient_id}")
 
         self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
         self.ui.dtedit_birthdate.setDate(QDate.currentDate())
@@ -48,7 +54,7 @@ class PatientDialog(QDialog):
 
         return store_name
 
-    def calculate_age(self, birthdate):
+    def calculate_age(self, birthdate) -> str:
         current_date = QDate.currentDate()
 
         age_years = current_date.year() - birthdate.year()
@@ -60,3 +66,88 @@ class PatientDialog(QDialog):
 
         age_text = f"{age_years}y {age_months}m"
         self.ui.lnedit_age.setText(age_text)
+
+    def get_last_patient_id(self) -> int:
+        self.database.connect()
+
+        query = f"USE `{self.database.database_name}`"
+        self.database.c.execute(query)
+
+        query = """
+            SELECT COUNT(id) 
+            FROM patients
+        """
+        self.database.c.execute(query)
+
+        last_patient_id = self.database.c.fetchone()
+
+        self.database.disconnect()
+
+        return last_patient_id[0]
+    
+    def handle_save(self):
+        id, name, sex, birthdate, age, contact_number, address = self.get_patient_data()
+
+        if name and birthdate != QDate.currentDate() and len(contact_number) == 17 and address:
+            patient_data = (id, name, sex, birthdate, age, contact_number, address)
+            self.insert_patient_data(patient_data)
+            self.accept()
+
+    def get_patient_data(self):
+        id = self.patient_id
+        name = self.ui.lnedit_name.text().strip()
+        sex = self.ui.cmbox_sex.currentText()
+        birthdate = self.ui.dtedit_birthdate.date().toPyDate()
+        age = self.ui.lnedit_age.text()
+        contact_number = self.ui.lnedit_contact_number.text().strip()
+        address = self.ui.txtedit_address.toPlainText().strip()
+
+        return id, name, sex, birthdate, age, contact_number, address
+
+    def insert_patient_data(self, patient_data):
+        id, name, sex, birthdate, age, contact_number, address = patient_data
+
+        self.database.connect()
+
+        query = f"USE `{self.database.database_name}`"
+        self.database.c.execute(query)
+
+        query = f"""
+            INSERT INTO patients (
+                id, 
+                name, 
+                sex, 
+                age, 
+                birthdate,
+                contact_number,
+                address
+            )
+            VALUES (
+                {id}, 
+                '{name}', 
+                '{sex}', 
+                '{age}', 
+                '{birthdate}',
+                '{contact_number}',
+                '{address}'
+            )
+        """
+        self.database.c.execute(query)
+
+        self.database.conn.commit()
+        self.database.disconnect()
+
+    def handle_reset(self):
+        self.ui.lnedit_name.clear()
+        self.ui.cmbox_sex.setCurrentIndex(0)
+        self.ui.dtedit_birthdate.setDate(QDate.currentDate())
+        self.ui.lnedit_contact_number.clear()
+        self.ui.txtedit_address.clear()
+
+    def handle_cancel(self):
+        self.close()
+
+    def connect_functions_to_buttons(self):
+        self.ui.pshbtn_save.clicked.connect(self.handle_save)
+        self.ui.pshbtn_reset.clicked.connect(self.handle_reset)
+        self.ui.pshbtn_cancel.clicked.connect(self.handle_cancel)

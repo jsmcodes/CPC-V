@@ -11,8 +11,8 @@ class Patients(QWidget):
         super().__init__()
         self.setup_ui()
         self.database = DatabaseManager()
-        patients = self.get_data()
-        self.populate_table(patients)
+        self.patients = self.get_data()
+        self.populate_table(self.patients)
         self.connect_functions_to_buttons()
 
     def setup_ui(self):
@@ -21,22 +21,24 @@ class Patients(QWidget):
 
         self.ui.tblwdgt_patients.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
 
-    def get_data(self):
+    def get_data(self, filtered=False):
         try:
             self.database.connect()
 
             query = f"USE `{self.database.database_name}`"
             self.database.c.execute(query)
 
-            query = """
-                SELECT id,
-                    name,
-                    sex,
-                    age,
-                    birthdate
-                FROM patients
-                ORDER BY id ASC
-            """
+            if filtered:
+                pass
+            else:
+                query = """
+                    SELECT id,
+                        name,
+                        sex,
+                        age
+                    FROM patients
+                    ORDER BY id ASC
+                """
             self.database.c.execute(query)
 
             patients = self.database.c.fetchall()
@@ -48,18 +50,13 @@ class Patients(QWidget):
             self.database.disconnect()
 
     def populate_table(self, patients):
+        self.ui.tblwdgt_patients.setRowCount(0)
         try:
             for patient in patients:
-                self.ui.tblwdgt_patients.setRowCount(0)
-
                 id = str(patient[0])
                 name = patient[1]
                 sex = patient[2]
                 age = str(patient[3])
-                birthdate = patient[4]
-                birthdate_str = birthdate.strftime('%Y-%m-%d')
-                birthdate_qdate = QDate.fromString(birthdate_str, 'yyyy-MM-dd')
-                birthdate_display = birthdate_qdate.toString('MMM d, yyyy')
 
                 row = self.ui.tblwdgt_patients.rowCount()
                 self.ui.tblwdgt_patients.insertRow(row)
@@ -68,7 +65,6 @@ class Patients(QWidget):
                 self.ui.tblwdgt_patients.setItem(row, 1, QTableWidgetItem(name.title()))
                 self.ui.tblwdgt_patients.setItem(row, 2, QTableWidgetItem(sex))
                 self.ui.tblwdgt_patients.setItem(row, 3, QTableWidgetItem(age))
-                self.ui.tblwdgt_patients.setItem(row, 4, QTableWidgetItem(birthdate_display))
 
                 for col in range(self.ui.tblwdgt_patients.columnCount()):
                     item = self.ui.tblwdgt_patients.item(row, col)
@@ -80,7 +76,11 @@ class Patients(QWidget):
 
     def handle_add(self):
         dialog = PatientDialog()
-        dialog.exec_()
+        result = dialog.exec_()
+
+        if result == dialog.Accepted:
+            self.patients = self.get_data()
+            self.populate_table(self.patients)
 
     def connect_functions_to_buttons(self):
         self.ui.pshbtn_add.clicked.connect(self.handle_add)

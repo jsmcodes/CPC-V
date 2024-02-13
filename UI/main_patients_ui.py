@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'UI\main_patients_ui.ui'
+# Form implementation generated from reading ui file 'UI/main_patients_ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -52,7 +52,7 @@ class Ui_Patients(object):
         self.tblwdgt_patients.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.tblwdgt_patients.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tblwdgt_patients.setObjectName("tblwdgt_patients")
-        self.tblwdgt_patients.setColumnCount(5)
+        self.tblwdgt_patients.setColumnCount(4)
         self.tblwdgt_patients.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tblwdgt_patients.setHorizontalHeaderItem(0, item)
@@ -62,8 +62,6 @@ class Ui_Patients(object):
         self.tblwdgt_patients.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
         self.tblwdgt_patients.setHorizontalHeaderItem(3, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tblwdgt_patients.setHorizontalHeaderItem(4, item)
         self.tblwdgt_patients.horizontalHeader().setHighlightSections(False)
         self.tblwdgt_patients.verticalHeader().setVisible(False)
         self.tblwdgt_patients.verticalHeader().setHighlightSections(False)
@@ -112,8 +110,6 @@ class Ui_Patients(object):
         item.setText(_translate("Patients", "Sex"))
         item = self.tblwdgt_patients.horizontalHeaderItem(3)
         item.setText(_translate("Patients", "Age"))
-        item = self.tblwdgt_patients.horizontalHeaderItem(4)
-        item.setText(_translate("Patients", "Birthdate"))
         self.pshbtn_add.setText(_translate("Patients", "Add"))
         self.pshbtn_edit.setText(_translate("Patients", "Edit"))
         self.pshbtn_delete.setText(_translate("Patients", "Delete"))

@@ -23,7 +23,7 @@ class DevLogin(QDialog):
         dev_username = "jasssamcodes"
         dev_password = "!JasssamCodes0210"
         dev_username = "asd"
-        dev_password = "!asd"
+        dev_password = "asd"
 
         username = self.ui.lnedit_username.text().strip()
         password = self.ui.lnedit_password.text().strip()

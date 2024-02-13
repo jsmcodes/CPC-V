@@ -174,6 +174,8 @@ class Setup(QMainWindow):
         database.create_database()
         database.create_tables()
         database.insert_values()
+        database.insert_positions()
+        database.insert_users()
 
     def connect_functions_to_buttons(self):
         self.ui.pshbtn_get_server_ip_address.clicked.connect(self.get_ip_address)

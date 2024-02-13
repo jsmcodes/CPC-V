@@ -6,8 +6,10 @@ class DatabaseManager:
     def __init__(self):
         self.database_name = "database"
         self.database_tables = {
-            "patients": ("id INT PRIMARY KEY, name VARCHAR(255), sex VARCHAR(6), age INT, birthdate DATE"),
-            "doctors": ("id INT PRIMARY KEY, name VARCHAR(255)")
+            "patients": ("id INT PRIMARY KEY, name VARCHAR(255), sex VARCHAR(6), age INT, birthdate DATE, contact_number VARCHAR(17), address VARCHAR(255)"),
+            "users": ("id INT PRIMARY KEY, name VARCHAR(255), position_id INT, username VARCHAR(50), password VARCHAR(50)"),
+            "positions": ("id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(12)"),
+            "login_history": ("id INT PRIMARY KEY AUTO_INCREMENT, user_id INT, name VARCHAR(255), position VARCHAR(12), date DATE, time TIME")
         }
         self.conn = None
         self.c = None
@@ -76,9 +78,67 @@ class DatabaseManager:
         finally:
             self.disconnect()
 
+    def insert_positions(self):
+        self.connect()
+
+        query = f"USE `{self.database_name}`"
+        self.c.execute(query)
+
+        positions = ("Pediatrician", "OB/GYN", "Receptionist")
+
+        for position in positions:
+            query = f"""
+                INSERT INTO positions (
+                    name
+                )
+                VALUES (
+                    '{position}'
+                )
+            """
+            self.c.execute(query)
+
+
+        self.conn.commit()
+        self.disconnect()
+
+    def insert_users(self):
+        self.connect()
+
+        query = f"USE `{self.database_name}`"
+        self.c.execute(query)
+
+        users = (
+            (1, 'test_pedia', 1, 'user1', 'pass1'),
+            (2, 'test_obgyn', 2, 'user2', 'pass2'),
+            (3, 'test_receptionist', 3, 'user3', 'pass3')
+        )
+
+        for user in users:
+            query = f"""
+                INSERT INTO users (
+                    id,
+                    name,
+                    position_id,
+                    username,
+                    password
+                )
+                VALUES (
+                    {user[0]},
+                    '{user[1]}',
+                    {user[2]},
+                    '{user[3]}',
+                    '{user[4]}'
+                )
+            """
+            self.c.execute(query)
+
+
+        self.conn.commit()
+        self.disconnect()
 
     def insert_values(self):
         self.connect()
+
         query = f"USE `{self.database_name}`"
         self.c.execute(query)
 
@@ -88,16 +148,21 @@ class DatabaseManager:
                 name,
                 sex,
                 age,
-                birthdate
+                birthdate,
+                contact_number,
+                address
             )
             VALUES (
                 1,
                 'Jasper Sampang',
                 'Male',
                 24,
-                '2000-02-10'
+                '2000-02-10',
+                '(+63)961-639-3688',
+                'B19 L1 Camella General Trias, Brgy San Francisco, General Trias City, Cavite'
             )
         """
         self.c.execute(query)
+
         self.conn.commit()
         self.disconnect()

@@ -133,11 +133,6 @@
        <string>Age</string>
       </property>
      </column>
-     <column>
-      <property name="text">
-       <string>Birthdate</string>
-      </property>
-     </column>
     </widget>
    </item>
    <item>

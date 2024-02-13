@@ -10,7 +10,6 @@ def main():
     app = QApplication(sys.argv)
     
     login = Login()
-    login.show()
     result = login.exec_()
 
     if result == login.Accepted:

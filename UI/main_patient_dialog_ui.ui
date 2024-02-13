@@ -105,12 +105,12 @@
      </property>
      <item>
       <property name="text">
-       <string>Male</string>
+       <string>Female</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Female</string>
+       <string>Male</string>
       </property>
      </item>
     </widget>
@@ -176,6 +176,9 @@
      <property name="inputMask">
       <string>(+63)\900-000-0000</string>
      </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
@@ -195,7 +198,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QTextEdit" name="textEdit">
+    <widget class="QTextEdit" name="txtedit_address">
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
@@ -208,10 +211,25 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="widget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+    <widget class="QWidget" name="wdgt_dialog_buttons" native="true">
+     <layout class="QHBoxLayout" name="wdgt_dialog_buttons_2" stretch="1,1,1">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="pshbtn_save">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
@@ -221,7 +239,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="pshbtn_reset">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
@@ -231,7 +249,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="pshbtn_cancel">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>

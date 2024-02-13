@@ -8,7 +8,7 @@ import subprocess
 import shutil
 import socket
 
-from create_database import DatabaseManager
+from database_manager import DatabaseManager
 from UI.setup_window_ui import Ui_Setup
 
 
@@ -87,95 +87,116 @@ class Setup(QMainWindow):
         self.ui.pxmp_small_logo.setText(r"[SMALL LOGO HERE]")
 
     def create_database_and_tables(self):
-        conn = sqlite3.connect("Database/setup.db")
-        cursor = conn.cursor()
+        try:
+            conn = sqlite3.connect("Database/setup.db")
+            cursor = conn.cursor()
 
-        query = """
-            CREATE TABLE IF NOT EXISTS setup (
-                server_ip_address VARCHAR(15),
-                store_name VARCHAR(255)
-            )
-        """
+            query = """
+                CREATE TABLE IF NOT EXISTS setup (
+                    server_ip_address VARCHAR(15),
+                    store_name VARCHAR(255)
+                )
+            """
 
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+            cursor.execute(query)
+            conn.commit()
+        except sqlite3.Error as e:
+            print(f"SQLite error: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+        finally:
+            conn.close()
 
     def insert_values(self, server_ip_address, store_name):
-        
-        conn = sqlite3.connect("Database/setup.db")
-        cursor = conn.cursor()
+        try:
+            conn = sqlite3.connect("Database/setup.db")
+            cursor = conn.cursor()
 
-        insert_query = """
-            INSERT INTO setup (
-                server_ip_address,
-                store_name
-            )
-            VALUES (
-                ?,
-                ?
-            )
-        """
+            insert_query = """
+                INSERT INTO setup (
+                    server_ip_address,
+                    store_name
+                )
+                VALUES (
+                    ?,
+                    ?
+                )
+            """
 
-        cursor.execute(insert_query, (server_ip_address, store_name))
-        conn.commit()
-        conn.close()
+            cursor.execute(insert_query, (server_ip_address, store_name))
+            conn.commit()
+        except sqlite3.Error as e:
+            print(f"SQLite error: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+        finally:
+            conn.close()
 
     def create_qrc_file(self):
-        window_icon_extension = os.path.splitext(self.window_icon_path)[1]
-        big_logo_extension = os.path.splitext(self.big_logo_path)[1]
-        small_logo_extension = os.path.splitext(self.small_logo_path)[1]
+        try:
+            resource_folder = "Resource"
 
-        window_icon_path = os.path.join("Resource", f"window_icon{window_icon_extension}")
-        big_logo_path = os.path.join("Resource", f"big_logo{big_logo_extension}")
-        small_logo_path = os.path.join("Resource", f"small_logo{small_logo_extension}")
+            for image_path in [self.window_icon_path, self.big_logo_path, self.small_logo_path]:
+                extension = os.path.splitext(image_path)[1]
+                new_path = os.path.join(resource_folder, f"{os.path.basename(image_path).replace(extension, '')}{extension}")
+                shutil.copy(image_path, new_path)
 
-        shutil.copy(self.window_icon_path, window_icon_path)
-        shutil.copy(self.big_logo_path, big_logo_path)
-        shutil.copy(self.small_logo_path, small_logo_path)
+            self.window_icon_path = f"window_icon{os.path.splitext(self.window_icon_path)[1]}"
+            self.big_logo_path = f"big_logo{os.path.splitext(self.big_logo_path)[1]}"
+            self.small_logo_path = f"small_logo{os.path.splitext(self.small_logo_path)[1]}"
 
-        window_icon_path = f"window_icon{window_icon_extension}"
-        big_logo_path = f"big_logo{big_logo_extension}"
-        small_logo_path = f"small_logo{small_logo_extension}"
+            qrc_content = f"""
+                <RCC>
+                    <qresource>
+                        <file>{self.window_icon_path}</file>
+                        <file>{self.big_logo_path}</file>
+                        <file>{self.small_logo_path}</file>
+                    </qresource>
+                </RCC>
+            """
 
-        self.window_icon_path = window_icon_path
-        self.big_logo_path = big_logo_path
-        self.small_logo_path = small_logo_path
+            qrc_file_path = os.path.join(resource_folder, "resource.qrc")
+            with open(qrc_file_path, "w") as qrc_file:
+                qrc_file.write(qrc_content)
 
-        qrc_content = f"""
-            <RCC>
-                <qresource>
-                    <file>{self.window_icon_path}</file>
-                    <file>{self.big_logo_path}</file>
-                    <file>{self.small_logo_path}</file>
-                </qresource>
-            </RCC>
-        """
-
-        qrc_file_path = "Resource/resource.qrc"
-        with open(qrc_file_path, "w") as qrc_file:
-            qrc_file.write(qrc_content)
+        except Exception as e:
+            print(f"An error occurred while creating QRC file: {e}")
 
     def convert_qrc_to_py(self):
-        command = f"pyrcc5 Resource/resource.qrc -o resource_rc.py"
-        subprocess.run(command, shell=True)
+        try:
+            command = f"pyrcc5 Resource/resource.qrc -o resource_rc.py"
+            subprocess.run(command, shell=True)
+
+        except Exception as e:
+            print(f"An error occurred while converting QRC to PY: {e}")
 
     def install_xampp(self):
-        xampp_path = r"C:\Users\jaspe\Documents\Coding\CPC IV\Install\xampp-windows-x64-8.2.12-0-VS16-installer.exe"
-        QDesktopServices.openUrl(QUrl.fromLocalFile(xampp_path))
+        try:
+            xampp_path = r"Install\xampp-windows-x64-8.2.12-0-VS16-installer.exe"
+            QDesktopServices.openUrl(QUrl.fromLocalFile(xampp_path))
+
+        except Exception as e:
+            print(f"An error occurred while trying to open XAMPP installer: {e}")
 
     def replace_config_file(self):
-        source_path = r"Install\httpd-xampp.conf"
-        destination_path = r"C:\xampp\apache\conf\extra"
+        try:
+            source_path = r"Install\httpd-xampp.conf"
+            destination_path = r"C:\xampp\apache\conf\extra"
 
-        shutil.copy(source_path, destination_path)
+            shutil.copy(source_path, destination_path)
 
-        database = DatabaseManager()
-        database.create_database()
-        database.create_tables()
-        database.insert_values()
-        database.insert_positions()
-        database.insert_users()
+            database = DatabaseManager()
+            database.create_database()
+            database.create_tables()
+            database.insert_values()
+            database.insert_positions()
+            database.insert_users()
+
+        except FileNotFoundError as file_error:
+            print(f"Error copying file: {file_error}")
+
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
 
     def connect_functions_to_buttons(self):
         self.ui.pshbtn_get_server_ip_address.clicked.connect(self.get_ip_address)

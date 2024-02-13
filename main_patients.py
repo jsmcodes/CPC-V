@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QHeaderView, QTableWidgetItem
 from PyQt5.QtCore import QDate, Qt
 
-from create_database import DatabaseManager
+from database_manager import DatabaseManager
 from UI.main_patients_ui import Ui_Patients
 from main_patient_dialog import PatientDialog
 
@@ -75,12 +75,31 @@ class Patients(QWidget):
             print(f"Error in populate_table: {e}")
 
     def handle_add(self):
-        dialog = PatientDialog()
+        dialog = PatientDialog(False)
         result = dialog.exec_()
 
         if result == dialog.Accepted:
             self.patients = self.get_data()
             self.populate_table(self.patients)
 
+    def handle_edit(self):
+        selected_item = self.ui.tblwdgt_patients.selectedItems()
+
+        if selected_item:
+            selected_row = selected_item[0].row()
+            patient_id = self.ui.tblwdgt_patients.item(selected_row, 0).text()
+            name = self.ui.tblwdgt_patients.item(selected_row, 1).text()
+            sex = self.ui.tblwdgt_patients.item(selected_row, 2).text()
+            
+            patient_data = patient_id, name, sex
+
+            dialog = PatientDialog(True, patient_data)
+            result = dialog.exec_()
+
+            if result == dialog.Accepted:
+                self.patients = self.get_data()
+                self.populate_table(self.patients)
+
     def connect_functions_to_buttons(self):
         self.ui.pshbtn_add.clicked.connect(self.handle_add)
+        self.ui.pshbtn_edit.clicked.connect(self.handle_edit)

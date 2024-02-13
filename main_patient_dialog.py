@@ -4,14 +4,16 @@ from PyQt5.QtGui import QIcon, QPixmap
 
 import sqlite3
 
-from create_database import DatabaseManager
+from database_manager import DatabaseManager
 from UI.main_patient_dialog_ui import Ui_PatientDialog
 
 
 class PatientDialog(QDialog):
-    def __init__(self):
+    def __init__(self, edit, patient_data=None):
         super().__init__()
         self.database = DatabaseManager()
+        self.edit = edit
+        self.patient_data = patient_data
         self.setup_ui()
         self.setup_window()
         self.connect_functions_to_buttons()
@@ -19,15 +21,49 @@ class PatientDialog(QDialog):
     def setup_ui(self):
         self.ui = Ui_PatientDialog()
         self.ui.setupUi(self)
-
-        self.patient_id = self.get_last_patient_id() + 1
-        self.ui.lbl_id.setText(f"Patient #{self.patient_id}")
-
-        self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
-        self.ui.dtedit_birthdate.setDate(QDate.currentDate())
-        
+            
         self.ui.dtedit_birthdate.dateChanged.connect(self.calculate_age)
         self.calculate_age(QDate.currentDate())
+
+        if self.edit:
+            self.patient_id, name, sex = self.patient_data
+            birthdate, contact_number, address = self.fetch_patient_data(self.patient_id)
+
+            self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
+
+            self.ui.lbl_id.setText(f"Patient #{self.patient_id}")
+            self.ui.lnedit_name.setText(name)
+            self.ui.cmbox_sex.setCurrentText(sex)
+            self.ui.dtedit_birthdate.setDate(birthdate)
+            self.ui.lnedit_contact_number.setText(contact_number)
+            self.ui.txtedit_address.setText(address)
+        else:
+            self.patient_id = self.get_last_patient_id() + 1
+            self.ui.lbl_id.setText(f"Patient #{self.patient_id}")
+
+            self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
+            self.ui.dtedit_birthdate.setDate(QDate.currentDate())
+
+    def fetch_patient_data(self, patient_id):
+        self.database.connect()
+
+        query = f"""
+            SELECT 
+                birthdate,
+                contact_number,
+                address
+            FROM
+                patients
+            WHERE
+                id = {patient_id}
+        """
+        self.database.c.execute(query)
+
+        patient_data = self.database.c.fetchone()
+
+        self.database.disconnect()
+
+        return patient_data
 
     def setup_window(self):
         self.setFixedSize(500, 720)
@@ -90,7 +126,10 @@ class PatientDialog(QDialog):
 
         if name and birthdate != QDate.currentDate() and len(contact_number) == 17 and address:
             patient_data = (id, name, sex, birthdate, age, contact_number, address)
-            self.insert_patient_data(patient_data)
+            if self.edit:
+                self.update_patient_data(patient_data)
+            else:
+                self.insert_patient_data(patient_data)
             self.accept()
 
     def get_patient_data(self):
@@ -108,9 +147,6 @@ class PatientDialog(QDialog):
         id, name, sex, birthdate, age, contact_number, address = patient_data
 
         self.database.connect()
-
-        query = f"USE `{self.database.database_name}`"
-        self.database.c.execute(query)
 
         query = f"""
             INSERT INTO patients (
@@ -137,12 +173,47 @@ class PatientDialog(QDialog):
         self.database.conn.commit()
         self.database.disconnect()
 
+    def update_patient_data(self, patient_data):
+        id, name, sex, birthdate, age, contact_number, address = patient_data
+
+        self.database.connect()
+
+        query = f"""
+            UPDATE patients
+            SET 
+                name = '{name}', 
+                sex = '{sex}', 
+                age = '{age}', 
+                birthdate = '{birthdate}',
+                contact_number = '{contact_number}',
+                address = '{address}'
+            WHERE
+                id = {id}
+        """
+        self.database.c.execute(query)
+
+        self.database.conn.commit()
+        self.database.disconnect()
+
     def handle_reset(self):
-        self.ui.lnedit_name.clear()
-        self.ui.cmbox_sex.setCurrentIndex(0)
-        self.ui.dtedit_birthdate.setDate(QDate.currentDate())
-        self.ui.lnedit_contact_number.clear()
-        self.ui.txtedit_address.clear()
+        if self.edit:
+            patient_id, name, sex = self.patient_data
+            birthdate, contact_number, address = self.fetch_patient_data(patient_id)
+
+            self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
+
+            self.ui.lbl_id.setText(f"Patient #{patient_id}")
+            self.ui.lnedit_name.setText(name)
+            self.ui.cmbox_sex.setCurrentText(sex)
+            self.ui.dtedit_birthdate.setDate(birthdate)
+            self.ui.lnedit_contact_number.setText(contact_number)
+            self.ui.txtedit_address.setText(address)
+        else:
+            self.ui.lnedit_name.clear()
+            self.ui.cmbox_sex.setCurrentIndex(0)
+            self.ui.dtedit_birthdate.setDate(QDate.currentDate())
+            self.ui.lnedit_contact_number.clear()
+            self.ui.txtedit_address.clear()
 
     def handle_cancel(self):
         self.close()

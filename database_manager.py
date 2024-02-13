@@ -6,7 +6,7 @@ class DatabaseManager:
     def __init__(self):
         self.database_name = "database"
         self.database_tables = {
-            "patients": ("id INT PRIMARY KEY, name VARCHAR(255), sex VARCHAR(6), age INT, birthdate DATE, contact_number VARCHAR(17), address VARCHAR(255)"),
+            "patients": ("id INT PRIMARY KEY, name VARCHAR(255), sex VARCHAR(6), age VARCHAR(8), birthdate DATE, contact_number VARCHAR(17), address VARCHAR(255)"),
             "users": ("id INT PRIMARY KEY, name VARCHAR(255), position_id INT, username VARCHAR(50), password VARCHAR(50)"),
             "positions": ("id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(12)"),
             "login_history": ("id INT PRIMARY KEY AUTO_INCREMENT, user_id INT, name VARCHAR(255), position VARCHAR(12), date DATE, time TIME")
@@ -41,6 +41,10 @@ class DatabaseManager:
                 password=self.password
             )
             self.c = self.conn.cursor()
+
+            query = f"USE `{self.database_name}`"
+            self.c.execute(query)
+            
             print("Connected to the MySQL server.")
         except mysql.connector.Error as err:
             print(f"Error: {err}")
@@ -156,7 +160,7 @@ class DatabaseManager:
                 1,
                 'Jasper Sampang',
                 'Male',
-                24,
+                '24y 0m',
                 '2000-02-10',
                 '(+63)961-639-3688',
                 'B19 L1 Camella General Trias, Brgy San Francisco, General Trias City, Cavite'

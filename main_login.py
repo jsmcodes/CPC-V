@@ -1,25 +1,18 @@
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import Qt, QDate, QTime
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtGui import QPixmap, QKeyEvent
 
-from create_database import DatabaseManager
+from database_manager import DatabaseManager
 from UI.main_login_ui import Ui_Login
 
 
-class Login(QDialog):
-    def __init__(self):
+class Login(QWidget):
+    def __init__(self, parent):
         super().__init__()
+        self.parent = parent
         self.database = DatabaseManager()
-        self.setup_window()
         self.setup_ui()
         self.connect_functions_to_buttons()
-
-    def setup_window(self):
-        self.setFixedSize(500, 500)
-        self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
-        icon = QIcon()
-        icon.addPixmap(QPixmap(":/window_icon.ico"), QIcon.Normal, QIcon.Off)
-        self.setWindowIcon(icon)
 
     def setup_ui(self):
         self.ui = Ui_Login()
@@ -35,9 +28,11 @@ class Login(QDialog):
             user_data = self.check_if_user_exists(username, password)
 
             if user_data:
-                print("Match")
                 self.insert_to_login_history(user_data)
-                self.accept()
+                self.ui.lnedit_username.clear()
+                self.ui.lnedit_password.clear()
+                self.ui.lnedit_username.setFocus()
+                self.parent.stckdwdgt_main.setCurrentIndex(1)
 
     def check_if_user_exists(self, username, password) -> tuple:
         try:
@@ -114,3 +109,7 @@ class Login(QDialog):
 
     def connect_functions_to_buttons(self) -> None:
         self.ui.pshbtn_login.clicked.connect(self.handle_login)
+    
+    def keyPressEvent(self, event: QKeyEvent):
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            self.handle_login()

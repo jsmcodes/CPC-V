@@ -1,28 +1,21 @@
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtWidgets import QWidget
 
-import sqlite3
-
-from create_database import DatabaseManager
-from UI.main_window_ui import Ui_MainWindow
+from database_manager import DatabaseManager
+from UI.main_content_ui import Ui_Content
 from main_patients import Patients
 
 
-class MainWindow(QMainWindow):
-    def __init__(self):
+class Content(QWidget):
+    def __init__(self, parent):
         super().__init__()
+        self.parent = parent
         self.database = DatabaseManager()
         self.setup_ui()
-        self.setup_window()
-        # self.connect_functions_to_buttons()
+        self.connect_functions_to_buttons()
 
     def setup_ui(self):
-        self.ui = Ui_MainWindow()
+        self.ui = Ui_Content()
         self.ui.setupUi(self)
-
-        pixmap = QPixmap(":/small_logo.png")
-        self.ui.pxmp_logo.setPixmap(pixmap)
 
         self.pg_patients = Patients()
 
@@ -33,7 +26,7 @@ class MainWindow(QMainWindow):
         if user_data:
             name, position = user_data
 
-            self.ui.lbl_full_name.setText(name)
+            self.ui.lbl_name.setText(name)
             self.ui.lbl_position.setText(position)
 
             if position == "Receptionist":
@@ -42,31 +35,6 @@ class MainWindow(QMainWindow):
                 pass
             else:
                 pass
-
-    def setup_window(self):
-        self.setFixedSize(1080, 720)
-        self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
-        icon = QIcon()
-        pixmap = QPixmap(":/window_icon.ico")
-        icon.addPixmap(pixmap, QIcon.Normal, QIcon.Off)
-        self.setWindowIcon(icon)
-        store_name = self.get_store_name()
-        self.setWindowTitle(store_name[0])
-
-    def get_store_name(self) -> str:
-        conn = sqlite3.connect("Database/setup.db")
-        c = conn.cursor()
-
-        query = """
-            SELECT store_name
-            FROM setup
-        """
-
-        c.execute(query)
-
-        store_name = c.fetchone()
-
-        return store_name
     
     def get_user_name_and_position(self) -> tuple:
         try:
@@ -96,3 +64,11 @@ class MainWindow(QMainWindow):
         except Exception as e:
             print(f"Error in get_user_name_and_position: {e}")
             return None
+
+    def handle_logout(self):
+        patients = self.pg_patients.get_data()
+        self.pg_patients.populate_table(patients)
+        self.parent.stckdwdgt_main.setCurrentIndex(0)
+
+    def connect_functions_to_buttons(self):
+        self.ui.pshbtn_logout.clicked.connect(self.handle_logout)

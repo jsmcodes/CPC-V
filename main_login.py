@@ -35,6 +35,7 @@ class Login(QDialog):
             user_data = self.check_if_user_exists(username, password)
 
             if user_data:
+                print("Match")
                 self.insert_to_login_history(user_data)
                 self.accept()
 

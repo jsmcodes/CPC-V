@@ -1,9 +1,0 @@
-
-            <RCC>
-                <qresource>
-                    <file>window_icon.ico</file>
-                    <file>big_logo.png</file>
-                    <file>small_logo.png</file>
-                </qresource>
-            </RCC>
-        

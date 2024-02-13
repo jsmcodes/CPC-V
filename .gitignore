@@ -1,6 +1,7 @@
-Install/
-.venv/
 __pycache__/
+.venv/
+Database/
+Install/
 Resource/
 resource_rc.py
 dev_resource_rc.py

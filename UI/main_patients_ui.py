@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'UI/main_patients_ui.ui'
+# Form implementation generated from reading ui file 'UI\main_patients_ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -29,21 +29,14 @@ class Ui_Patients(object):
         self.wdgt_search_filter_layout.setContentsMargins(0, 0, 0, 0)
         self.wdgt_search_filter_layout.setSpacing(10)
         self.wdgt_search_filter_layout.setObjectName("wdgt_search_filter_layout")
+        self.chkbox_archived = QtWidgets.QCheckBox(self.wdgt_search_filter)
+        self.chkbox_archived.setObjectName("chkbox_archived")
+        self.wdgt_search_filter_layout.addWidget(self.chkbox_archived)
         self.lnedit_name = QtWidgets.QLineEdit(self.wdgt_search_filter)
         self.lnedit_name.setAlignment(QtCore.Qt.AlignCenter)
         self.lnedit_name.setObjectName("lnedit_name")
         self.wdgt_search_filter_layout.addWidget(self.lnedit_name)
-        self.lnedit_sex = QtWidgets.QLineEdit(self.wdgt_search_filter)
-        self.lnedit_sex.setAlignment(QtCore.Qt.AlignCenter)
-        self.lnedit_sex.setObjectName("lnedit_sex")
-        self.wdgt_search_filter_layout.addWidget(self.lnedit_sex)
-        self.lnedit_age = QtWidgets.QLineEdit(self.wdgt_search_filter)
-        self.lnedit_age.setAlignment(QtCore.Qt.AlignCenter)
-        self.lnedit_age.setObjectName("lnedit_age")
-        self.wdgt_search_filter_layout.addWidget(self.lnedit_age)
-        self.wdgt_search_filter_layout.setStretch(0, 1)
         self.wdgt_search_filter_layout.setStretch(1, 1)
-        self.wdgt_search_filter_layout.setStretch(2, 1)
         self.main_layout.addWidget(self.wdgt_search_filter)
         self.tblwdgt_patients = QtWidgets.QTableWidget(Patients)
         self.tblwdgt_patients.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
@@ -80,10 +73,10 @@ class Ui_Patients(object):
         self.pshbtn_edit.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pshbtn_edit.setObjectName("pshbtn_edit")
         self.wdgt_page_buttons_layout.addWidget(self.pshbtn_edit)
-        self.pshbtn_delete = QtWidgets.QPushButton(self.wdgt_page_buttons)
-        self.pshbtn_delete.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pshbtn_delete.setObjectName("pshbtn_delete")
-        self.wdgt_page_buttons_layout.addWidget(self.pshbtn_delete)
+        self.pshbtn_archive = QtWidgets.QPushButton(self.wdgt_page_buttons)
+        self.pshbtn_archive.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pshbtn_archive.setObjectName("pshbtn_archive")
+        self.wdgt_page_buttons_layout.addWidget(self.pshbtn_archive)
         self.wdgt_page_buttons_layout.setStretch(0, 1)
         self.wdgt_page_buttons_layout.setStretch(1, 1)
         self.wdgt_page_buttons_layout.setStretch(2, 1)
@@ -99,9 +92,8 @@ class Ui_Patients(object):
     def retranslateUi(self, Patients):
         _translate = QtCore.QCoreApplication.translate
         self.lbl_search_filter.setText(_translate("Patients", "Search/Filter:"))
+        self.chkbox_archived.setText(_translate("Patients", "Archived"))
         self.lnedit_name.setPlaceholderText(_translate("Patients", "Enter name..."))
-        self.lnedit_sex.setPlaceholderText(_translate("Patients", "Enter sex..."))
-        self.lnedit_age.setPlaceholderText(_translate("Patients", "Enter age..."))
         item = self.tblwdgt_patients.horizontalHeaderItem(0)
         item.setText(_translate("Patients", "ID"))
         item = self.tblwdgt_patients.horizontalHeaderItem(1)
@@ -112,7 +104,7 @@ class Ui_Patients(object):
         item.setText(_translate("Patients", "Age"))
         self.pshbtn_add.setText(_translate("Patients", "Add"))
         self.pshbtn_edit.setText(_translate("Patients", "Edit"))
-        self.pshbtn_delete.setText(_translate("Patients", "Delete"))
+        self.pshbtn_archive.setText(_translate("Patients", "Archive"))
 
 
 if __name__ == "__main__":

@@ -16,7 +16,6 @@ class PatientDialog(QDialog):
         self.patient_data = patient_data
         self.setup_ui()
         self.setup_window()
-        self.connect_functions_to_buttons()
 
     def setup_ui(self):
         self.ui = Ui_PatientDialog()
@@ -43,6 +42,8 @@ class PatientDialog(QDialog):
 
             self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
             self.ui.dtedit_birthdate.setDate(QDate.currentDate())
+            
+        self.connect_functions_to_buttons()
 
     def fetch_patient_data(self, patient_id):
         self.database.connect()
@@ -68,10 +69,12 @@ class PatientDialog(QDialog):
     def setup_window(self):
         self.setFixedSize(500, 720)
         self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+
         icon = QIcon()
         pixmap = QPixmap(":/window_icon.ico")
         icon.addPixmap(pixmap, QIcon.Normal, QIcon.Off)
         self.setWindowIcon(icon)
+
         store_name = self.get_store_name()
         self.setWindowTitle(store_name[0])
 
@@ -105,9 +108,6 @@ class PatientDialog(QDialog):
 
     def get_last_patient_id(self) -> int:
         self.database.connect()
-
-        query = f"USE `{self.database.database_name}`"
-        self.database.c.execute(query)
 
         query = """
             SELECT COUNT(id) 
@@ -150,7 +150,6 @@ class PatientDialog(QDialog):
 
         query = f"""
             INSERT INTO patients (
-                id, 
                 name, 
                 sex, 
                 age, 
@@ -159,7 +158,6 @@ class PatientDialog(QDialog):
                 address
             )
             VALUES (
-                {id}, 
                 '{name}', 
                 '{sex}', 
                 '{age}', 

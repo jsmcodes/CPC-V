@@ -19,6 +19,9 @@ class Ui_Setup(object):
         font.setFamily("Verdana")
         font.setPointSize(12)
         Setup.setFont(font)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/logo-removebg.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Setup.setWindowIcon(icon)
         self.central_widget = QtWidgets.QWidget(Setup)
         self.central_widget.setObjectName("central_widget")
         self.central_widget_layout = QtWidgets.QVBoxLayout(self.central_widget)
@@ -147,6 +150,7 @@ class Ui_Setup(object):
         self.pshbtn_save.setText(_translate("Setup", "Save"))
         self.pshbtn_config.setText(_translate("Setup", "Config"))
         self.pshbtn_clear.setText(_translate("Setup", "Clear"))
+import dev_resource_rc
 
 
 if __name__ == "__main__":

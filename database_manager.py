@@ -6,9 +6,9 @@ class DatabaseManager:
     def __init__(self):
         self.database_name = "database"
         self.database_tables = {
-            "patients": ("id INT PRIMARY KEY, name VARCHAR(255), sex VARCHAR(6), age VARCHAR(8), birthdate DATE, contact_number VARCHAR(17), address VARCHAR(255)"),
-            "users": ("id INT PRIMARY KEY, name VARCHAR(255), position_id INT, username VARCHAR(50), password VARCHAR(50)"),
-            "positions": ("id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(12)"),
+            "patients": ("id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), sex VARCHAR(6), age VARCHAR(8), birthdate DATE, contact_number VARCHAR(17), address VARCHAR(255), archived BIT(1) DEFAULT 0"),
+            "users": ("id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), position_id INT, username VARCHAR(50), password VARCHAR(50), archived BIT(1) DEFAULT 0"),
+            "positions": ("id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(12), archived BIT(1) DEFAULT 0"),
             "login_history": ("id INT PRIMARY KEY AUTO_INCREMENT, user_id INT, name VARCHAR(255), position VARCHAR(12), date DATE, time TIME")
         }
         self.conn = None
@@ -69,8 +69,6 @@ class DatabaseManager:
     def create_tables(self):
         try:
             self.connect()
-            use_db_query = f"USE `{self.database_name}`"
-            self.c.execute(use_db_query)
 
             for table_name, table_structure in self.database_tables.items():
                 create_table_query = f"CREATE TABLE IF NOT EXISTS `{table_name}` ({table_structure})"
@@ -84,9 +82,6 @@ class DatabaseManager:
 
     def insert_positions(self):
         self.connect()
-
-        query = f"USE `{self.database_name}`"
-        self.c.execute(query)
 
         positions = ("Pediatrician", "OB/GYN", "Receptionist")
 
@@ -108,30 +103,25 @@ class DatabaseManager:
     def insert_users(self):
         self.connect()
 
-        query = f"USE `{self.database_name}`"
-        self.c.execute(query)
-
         users = (
-            (1, 'test_pedia', 1, 'user1', 'pass1'),
-            (2, 'test_obgyn', 2, 'user2', 'pass2'),
-            (3, 'test_receptionist', 3, 'user3', 'pass3')
+            ('test_pedia', 1, 'user1', 'pass1'),
+            ('test_obgyn', 2, 'user2', 'pass2'),
+            ('test_receptionist', 3, 'user3', 'pass3')
         )
 
         for user in users:
             query = f"""
                 INSERT INTO users (
-                    id,
                     name,
                     position_id,
                     username,
                     password
                 )
                 VALUES (
-                    {user[0]},
-                    '{user[1]}',
-                    {user[2]},
-                    '{user[3]}',
-                    '{user[4]}'
+                    '{user[0]}',
+                    {user[1]},
+                    '{user[2]}',
+                    '{user[3]}'
                 )
             """
             self.c.execute(query)
@@ -143,12 +133,8 @@ class DatabaseManager:
     def insert_values(self):
         self.connect()
 
-        query = f"USE `{self.database_name}`"
-        self.c.execute(query)
-
         query = """
             INSERT INTO patients (
-                id,
                 name,
                 sex,
                 age,
@@ -157,7 +143,6 @@ class DatabaseManager:
                 address
             )
             VALUES (
-                1,
                 'Jasper Sampang',
                 'Male',
                 '24y 0m',

@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QWidget
 from database_manager import DatabaseManager
 from UI.main_content_ui import Ui_Content
 from main_patients import Patients
+from main_doctors import Doctors
 
 
 class Content(QWidget):
@@ -11,16 +12,23 @@ class Content(QWidget):
         self.parent = parent
         self.database = DatabaseManager()
         self.setup_ui()
-        self.connect_functions_to_buttons()
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         self.ui = Ui_Content()
         self.ui.setupUi(self)
+        self.add_pages()
+        self.connect_functions_to_buttons()
 
-        self.pg_patients = Patients()
+    def add_pages(self) -> None:
+        self.pages = {
+            "patients": Patients(),
+            "doctors": Doctors()
+        }
 
-        self.ui.stckdwdgt_content.addWidget(self.pg_patients)
+        for name, page in self.pages.items():
+            self.ui.stckdwdgt_content.addWidget(page)
 
+    def set_user_name_and_position(self) -> None:
         user_data = self.get_user_name_and_position()
 
         if user_data:
@@ -35,13 +43,10 @@ class Content(QWidget):
                 pass
             else:
                 pass
-    
+
     def get_user_name_and_position(self) -> tuple:
         try:
             self.database.connect()
-
-            query = f"USE `{self.database.database_name}`"
-            self.database.c.execute(query)
 
             query = """
                 SELECT 
@@ -65,10 +70,17 @@ class Content(QWidget):
             print(f"Error in get_user_name_and_position: {e}")
             return None
 
-    def handle_logout(self):
-        patients = self.pg_patients.get_data()
-        self.pg_patients.populate_table(patients)
+    def set_patients_page_ui(self, position):
+        if position == "Receptionist":
+            self.pages["patients"].ui.pshbtn_archive.setEnabled(False)
+        else:
+            self.pages["patients"].ui.pshbtn_archive.setEnabled(True)
+
+    def handle_logout(self) -> None:
+        self.pages["patients"].ui.chkbox_archived.setCheckState(False)
+        patients = self.pages["patients"].get_data()
+        self.pages["patients"].populate_table(patients)
         self.parent.stckdwdgt_main.setCurrentIndex(0)
 
-    def connect_functions_to_buttons(self):
+    def connect_functions_to_buttons(self) -> None:
         self.ui.pshbtn_logout.clicked.connect(self.handle_logout)

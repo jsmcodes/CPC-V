@@ -12,13 +12,15 @@ class Login(QWidget):
         self.parent = parent
         self.database = DatabaseManager()
         self.setup_ui()
-        self.connect_functions_to_buttons()
 
     def setup_ui(self):
         self.ui = Ui_Login()
         self.ui.setupUi(self)
+        
         pixmap = QPixmap(":/big_logo.png")
         self.ui.pxmp_logo.setPixmap(pixmap)
+
+        self.connect_functions_to_buttons()
 
     def handle_login(self):
         username = self.ui.lnedit_username.text().strip()
@@ -28,18 +30,17 @@ class Login(QWidget):
             user_data = self.check_if_user_exists(username, password)
 
             if user_data:
+                position = user_data[2]
                 self.insert_to_login_history(user_data)
                 self.ui.lnedit_username.clear()
                 self.ui.lnedit_password.clear()
                 self.ui.lnedit_username.setFocus()
                 self.parent.stckdwdgt_main.setCurrentIndex(1)
+                self.parent.update_content_ui(position)
 
     def check_if_user_exists(self, username, password) -> tuple:
         try:
             self.database.connect()
-
-            query = f"USE `{self.database.database_name}`"
-            self.database.c.execute(query)
 
             query = f"""
                 SELECT 
@@ -77,9 +78,6 @@ class Login(QWidget):
             time = QTime.currentTime().toString(Qt.ISODate)
 
             self.database.connect()
-
-            query = f"USE `{self.database.database_name}`"
-            self.database.c.execute(query)
 
             query = f"""
                 INSERT INTO login_history (

@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Setup</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../Resource/dev_resource.qrc">
+    <normaloff>:/icons/logo-removebg.ico</normaloff>:/icons/logo-removebg.ico</iconset>
+  </property>
   <widget class="QWidget" name="central_widget">
    <layout class="QVBoxLayout" name="central_widget_layout" stretch="1,1,1,1,1,1,4,1,1,4,1,1,4,1,1,1,1,1">
     <property name="spacing">
@@ -231,6 +235,8 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Resource/dev_resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

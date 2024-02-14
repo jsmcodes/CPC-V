@@ -81,6 +81,8 @@ class Setup(QMainWindow):
     def handle_clear(self):
         self.ui.lnedit_server_ip_address.clear()
         self.ui.lnedit_store_name.clear()
+        self.ui.pxmp_window_icon.clear()
+        self.ui.pxmp_window_icon.setText(r"[WINDOW ICON HERE]")
         self.ui.pxmp_big_logo.clear()
         self.ui.pxmp_big_logo.setText(r"[BIG LOGO HERE]")
         self.ui.pxmp_small_logo.clear()

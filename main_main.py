@@ -60,6 +60,9 @@ class MainWindow(QMainWindow):
         for name, page in self.pages.items():
             self.stckdwdgt_main.addWidget(page)
 
+    def update_content_ui(self, position):
+        self.pages["content"].set_user_name_and_position()
+        self.pages["content"].set_patients_page_ui(position)
 
 def main():
     app = QApplication(sys.argv)

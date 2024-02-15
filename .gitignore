@@ -7,3 +7,8 @@ resource_rc.py
 dev_resource_rc.py
 test.py
 Output/
+Database/setup.db
+TESTS/check_new_data_notif.py
+TESTS/import_data_to_table.py
+TESTS/patients_data.xlsx
+TESTS/pc_to_phone.py

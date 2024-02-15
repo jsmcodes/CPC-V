@@ -28,6 +28,10 @@ class Content(QWidget):
         for name, page in self.pages.items():
             self.ui.stckdwdgt_content.addWidget(page)
 
+    def switch_page(self, page_name: str) -> None:
+        index = list(self.pages.keys()).index(page_name)
+        self.ui.stckdwdgt_content.setCurrentIndex(index)
+
     def set_user_name_and_position(self) -> None:
         user_data = self.get_user_name_and_position()
 
@@ -83,4 +87,6 @@ class Content(QWidget):
         self.parent.stckdwdgt_main.setCurrentIndex(0)
 
     def connect_functions_to_buttons(self) -> None:
+        self.ui.pshbtn_patients.clicked.connect(lambda: self.switch_page("patients"))
+        self.ui.pshbtn_doctors.clicked.connect(lambda: self.switch_page("doctors"))
         self.ui.pshbtn_logout.clicked.connect(self.handle_logout)

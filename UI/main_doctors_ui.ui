@@ -38,9 +38,12 @@
    </item>
    <item>
     <widget class="QWidget" name="wdgt_search_filter" native="true">
-     <layout class="QHBoxLayout" name="wdgt_search_filter_layout" stretch="0,1,1">
+     <layout class="QHBoxLayout" name="wdgt_search_filter_layout" stretch="0,1">
       <property name="spacing">
        <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
       </property>
       <property name="topMargin">
        <number>0</number>
@@ -68,16 +71,6 @@
         </property>
         <property name="placeholderText">
          <string>Enter name...</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="lnedit_position">
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="placeholderText">
-         <string>Enter position...</string>
         </property>
        </widget>
       </item>
@@ -128,10 +121,13 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="wdgt_pg_buttons" native="true">
+    <widget class="QWidget" name="wdgt_page_buttons" native="true">
      <layout class="QHBoxLayout" name="wdgt_pg_buttons_layout" stretch="1,1,1">
       <property name="spacing">
        <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
       </property>
       <property name="topMargin">
        <number>0</number>

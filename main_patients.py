@@ -93,7 +93,7 @@ class Patients(QWidget):
             self.ui.tblwdgt_patients.setRowCount(0)
             print(f"Error in populate_table: {e}")
 
-    def handle_archived_check(self, state):
+    def handle_archived_check(self, state) -> None:
         if state == Qt.Checked:
             self.archived = 1
             self.ui.pshbtn_archive.setText("Unarchive")

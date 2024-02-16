@@ -80,6 +80,12 @@ class Content(QWidget):
         else:
             self.pages["patients"].ui.pshbtn_archive.setEnabled(True)
 
+    def set_doctors_page_ui(self, position):
+        if position == "Receptionist":
+            self.pages["doctors"].ui.pshbtn_archive.setEnabled(False)
+        else:
+            self.pages["doctors"].ui.pshbtn_archive.setEnabled(True)
+    
     def handle_logout(self) -> None:
         self.pages["patients"].ui.chkbox_archived.setCheckState(False)
         patients = self.pages["patients"].get_data()

@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 
 from database_manager import DatabaseManager
 from UI.main_doctors_ui import Ui_Doctors
+from main_doctor_dialog import DoctorDialog
 
 
 class Doctors(QWidget):
@@ -19,6 +20,7 @@ class Doctors(QWidget):
         self.ui.tblwdgt_doctors.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
 
         self.populate_table()
+        self.connect_functions()
 
     def get_data(self) -> tuple:
         self.database.connect()
@@ -67,3 +69,13 @@ class Doctors(QWidget):
                 item = self.ui.tblwdgt_doctors.item(row, col)
                 if item is not None:
                     item.setTextAlignment(Qt.AlignCenter)
+
+    def handle_add(self):
+        dialog = DoctorDialog()
+        result = dialog.exec_()
+
+        if result == dialog.Accepted:
+            self.populate_table()
+
+    def connect_functions(self):
+        self.ui.pshbtn_add.clicked.connect(self.handle_add)

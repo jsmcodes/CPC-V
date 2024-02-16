@@ -15,8 +15,8 @@ class DatabaseManager:
         self.c = None
 
         self.host = self.get_server_ip_address()
-        self.user = "globe_bp"
-        self.password = "wifipass"
+        self.user = "mobile_hs"
+        self.password = "mobilepass"
 
     def get_server_ip_address(self):
         conn = sqlite3.connect("Database/setup.db")

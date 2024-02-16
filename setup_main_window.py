@@ -32,10 +32,15 @@ class Setup(QMainWindow):
 
     def get_ip_address(self):
         hostname = socket.gethostname()
-        
-        ip_address = socket.gethostbyname(hostname)
+
+        # Get a list of IP addresses associated with the hostname
+        ip_addresses = socket.gethostbyname_ex(hostname)[2]
+
+        # Select the first IP address from the list
+        ip_address = ip_addresses[0] if ip_addresses else "No IP address found"
 
         self.ui.lnedit_server_ip_address.setText(ip_address)
+
 
     def handle_change_window_icon(self):
         self.window_icon_path = None

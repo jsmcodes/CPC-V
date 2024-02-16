@@ -24,24 +24,30 @@ class PatientDialog(QDialog):
         self.ui.dtedit_birthdate.dateChanged.connect(self.calculate_age)
         self.calculate_age(QDate.currentDate())
 
+        self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
+
         if self.edit:
             self.patient_id, name, sex = self.patient_data
             birthdate, contact_number, address = self.fetch_patient_data(self.patient_id)
 
-            self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
-
             self.ui.lbl_id.setText(f"Patient #{self.patient_id}")
+
             self.ui.lnedit_name.setText(name)
+
             self.ui.cmbox_sex.setCurrentText(sex)
+
             self.ui.dtedit_birthdate.setDate(birthdate)
+            self.ui.dtedit_birthdate.setMaximumDate(QDate.currentDate())
+
             self.ui.lnedit_contact_number.setText(contact_number)
+            
             self.ui.txtedit_address.setText(address)
         else:
             self.patient_id = self.get_last_patient_id() + 1
             self.ui.lbl_id.setText(f"Patient #{self.patient_id}")
 
-            self.ui.cmbox_sex.lineEdit().setAlignment(Qt.AlignCenter)
             self.ui.dtedit_birthdate.setDate(QDate.currentDate())
+            self.ui.dtedit_birthdate.setMaximumDate(QDate.currentDate())
             
         self.connect_functions_to_buttons()
 

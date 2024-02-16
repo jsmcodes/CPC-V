@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_PatientDialog(object):
     def setupUi(self, PatientDialog):
         PatientDialog.setObjectName("PatientDialog")
-        PatientDialog.resize(500, 700)
+        PatientDialog.resize(500, 720)
         font = QtGui.QFont()
         font.setFamily("Verdana")
         font.setPointSize(10)
@@ -114,7 +114,6 @@ class Ui_PatientDialog(object):
         self.wdgt_dialog_buttons_2.setStretch(1, 1)
         self.wdgt_dialog_buttons_2.setStretch(2, 1)
         self.main_layout.addWidget(self.wdgt_dialog_buttons)
-        self.main_layout.setStretch(0, 1)
         self.main_layout.setStretch(1, 1)
         self.main_layout.setStretch(2, 1)
         self.main_layout.setStretch(3, 1)

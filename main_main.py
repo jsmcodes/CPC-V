@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stckdwdgt_main)
 
     def setup_window(self):
-        self.setFixedSize(1080, 720)
+        self.setFixedSize(1350, 720)
         self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
         icon = QIcon()
         pixmap = QPixmap(":/window_icon.ico")
@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(store_name[0])
         font = QFont()
         font.setFamily("Verdana")
-        font.setPointSize(12)
+        font.setPointSize(8)
         self.setFont(font)
 
     def get_store_name(self) -> str:
@@ -60,8 +60,10 @@ class MainWindow(QMainWindow):
         for name, page in self.pages.items():
             self.stckdwdgt_main.addWidget(page)
 
-    def update_content_ui(self, position):
-        self.pages["content"].switch_page("patients")
+    def update_content_ui(self, name, position):
+        self.pages["content"].user_name = name
+        self.pages["content"].user_position = position
+        self.pages["content"].switch_page("dashboard")
         self.pages["content"].set_user_name_and_position()
         self.pages["content"].set_patients_page_ui(position)
         self.pages["content"].set_doctors_page_ui(position)

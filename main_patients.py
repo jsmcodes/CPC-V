@@ -7,8 +7,9 @@ from main_patient_dialog import PatientDialog
 
 
 class Patients(QWidget):
-    def __init__(self):
+    def __init__(self, parent) -> None:
         super().__init__()
+        self.parent = parent
         self.database = DatabaseManager()
         self.archived = 0
         self.setup_ui()
@@ -43,6 +44,8 @@ class Patients(QWidget):
                         '%{value}%'
                     AND
                         archived = {self.archived}
+                    ORDER BY
+                        id DESC
                 """
             else:
                 query = f"""
@@ -56,7 +59,7 @@ class Patients(QWidget):
                     WHERE
                         archived = {self.archived}
                     ORDER BY 
-                        id ASC 
+                        id DESC 
                 """
             self.database.c.execute(query)
 
@@ -112,7 +115,7 @@ class Patients(QWidget):
             self.populate_table(self.patients)
 
     def handle_add(self) -> None:
-        dialog = PatientDialog(False)
+        dialog = PatientDialog(self, False)
         result = dialog.exec_()
 
         if result == dialog.Accepted:
@@ -130,7 +133,7 @@ class Patients(QWidget):
             
             patient_data = patient_id, name, sex
 
-            dialog = PatientDialog(True, patient_data)
+            dialog = PatientDialog(self, True, patient_data)
             result = dialog.exec_()
 
             if result == dialog.Accepted:

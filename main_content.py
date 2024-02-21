@@ -2,27 +2,37 @@ from PyQt5.QtWidgets import QWidget
 
 from database_manager import DatabaseManager
 from UI.main_content_ui import Ui_Content
+from main_dashboard import Dashboard
+from main_consultations import Consultations
 from main_patients import Patients
 from main_doctors import Doctors
+from main_positions import Positions
 
 
 class Content(QWidget):
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
+        self.user_name = None
+        self.user_position = None
         self.database = DatabaseManager()
         self.setup_ui()
 
     def setup_ui(self) -> None:
         self.ui = Ui_Content()
         self.ui.setupUi(self)
+
         self.add_pages()
+
         self.connect_functions_to_buttons()
 
     def add_pages(self) -> None:
         self.pages = {
-            "patients": Patients(),
-            "doctors": Doctors()
+            "dashboard": Dashboard(self),
+            "consultations": Consultations(self),
+            "patients": Patients(self),
+            "doctors": Doctors(self),
+            "positions": Positions(self)
         }
 
         for name, page in self.pages.items():
@@ -32,53 +42,19 @@ class Content(QWidget):
         index = list(self.pages.keys()).index(page_name)
         self.ui.stckdwdgt_content.setCurrentIndex(index)
 
-    def set_user_name_and_position(self) -> None:
-        user_data = self.get_user_name_and_position()
-
-        if user_data:
-            name, position = user_data
-
-            self.ui.lbl_name.setText(name)
-            self.ui.lbl_position.setText(position)
-
-            if position == "Receptionist":
-                pass
-            elif position == "Administrator":
-                pass
-            else:
-                pass
-
-    def get_user_name_and_position(self) -> tuple:
-        try:
-            self.database.connect()
-
-            query = """
-                SELECT 
-                    name,
-                    position
-                FROM
-                    login_history
-                ORDER BY
-                    id
-                DESC LIMIT 1
-            """
-            self.database.c.execute(query)
-
-            user_data = self.database.c.fetchone()
-
-            self.database.disconnect()
-
-            return user_data
-
-        except Exception as e:
-            print(f"Error in get_user_name_and_position: {e}")
-            return None
+    def set_user_name_and_position(self):
+        self.ui.lbl_name.setText(self.user_name)
+        self.ui.lbl_position.setText(self.user_position)
 
     def set_patients_page_ui(self, position):
         if position == "Receptionist":
+            self.pages["patients"].ui.pshbtn_add.setEnabled(True)
+            self.pages["patients"].ui.pshbtn_edit.setEnabled(True)
             self.pages["patients"].ui.pshbtn_archive.setEnabled(False)
         else:
-            self.pages["patients"].ui.pshbtn_archive.setEnabled(True)
+            self.pages["patients"].ui.pshbtn_add.setEnabled(False)
+            self.pages["patients"].ui.pshbtn_edit.setEnabled(False)
+            self.pages["patients"].ui.pshbtn_archive.setEnabled(False)
 
     def set_doctors_page_ui(self, position):
         if position == "Receptionist":
@@ -93,6 +69,9 @@ class Content(QWidget):
         self.parent.stckdwdgt_main.setCurrentIndex(0)
 
     def connect_functions_to_buttons(self) -> None:
+        self.ui.pshbtn_dashboard.clicked.connect(lambda: self.switch_page("dashboard"))
+        self.ui.pshbtn_consultations.clicked.connect(lambda: self.switch_page("consultations"))
         self.ui.pshbtn_patients.clicked.connect(lambda: self.switch_page("patients"))
         self.ui.pshbtn_doctors.clicked.connect(lambda: self.switch_page("doctors"))
+        self.ui.pshbtn_positions.clicked.connect(lambda: self.switch_page("positions"))
         self.ui.pshbtn_logout.clicked.connect(self.handle_logout)

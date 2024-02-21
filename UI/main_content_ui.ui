@@ -31,7 +31,7 @@
    </property>
    <item>
     <widget class="QWidget" name="wdgt_navigation" native="true">
-     <layout class="QVBoxLayout" name="wdgt_navigation_layout" stretch="5,1,1,1,10,1,1">
+     <layout class="QVBoxLayout" name="wdgt_navigation_layout" stretch="5,1,0,1,1,0,10,1,1">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -149,6 +149,19 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pshbtn_consultations">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>Consultations</string>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pshbtn_patients">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -180,6 +193,19 @@
         </property>
         <property name="text">
          <string>Doctors</string>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pshbtn_positions">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>Positions</string>
         </property>
         <property name="flat">
          <bool>true</bool>

@@ -9,8 +9,9 @@ from UI.main_patient_dialog_ui import Ui_PatientDialog
 
 
 class PatientDialog(QDialog):
-    def __init__(self, edit, patient_data=None):
+    def __init__(self, parent, edit, patient_data=None):
         super().__init__()
+        self.parent = parent
         self.database = DatabaseManager()
         self.edit = edit
         self.patient_data = patient_data
@@ -74,7 +75,7 @@ class PatientDialog(QDialog):
 
     def setup_window(self):
         self.setFixedSize(500, 720)
-        self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+        self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint)
 
         icon = QIcon()
         pixmap = QPixmap(":/window_icon.ico")
@@ -99,7 +100,7 @@ class PatientDialog(QDialog):
 
         return store_name
 
-    def calculate_age(self, birthdate) -> str:
+    def calculate_age(self, birthdate):
         current_date = QDate.currentDate()
 
         age_years = current_date.year() - birthdate.year()

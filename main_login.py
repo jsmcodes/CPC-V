@@ -30,13 +30,14 @@ class Login(QWidget):
             user_data = self.check_if_user_exists(username, password)
 
             if user_data:
+                name = user_data[1]
                 position = user_data[2]
                 self.insert_to_login_history(user_data)
                 self.ui.lnedit_username.clear()
                 self.ui.lnedit_password.clear()
                 self.ui.lnedit_username.setFocus()
                 self.parent.stckdwdgt_main.setCurrentIndex(1)
-                self.parent.update_content_ui(position)
+                self.parent.update_content_ui(name, position)
 
     def check_if_user_exists(self, username, password) -> tuple:
         try:
